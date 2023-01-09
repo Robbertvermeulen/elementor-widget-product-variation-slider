@@ -49,6 +49,10 @@ add_action('wp_ajax_nopriv_pvsw_add_to_cart', 'pvsw_handle_ajax_add_to_cart');
  */
 function pvsw_register_new_widgets($widgets_manager) {
 
+    if (!class_exists('Elementor\Widget_Base')) {
+        return;
+    }
+
     class WooCommerce_Product_Variation_Price_Slider_Elementor_Widget extends Elementor\Widget_Base {
         
         public function get_name() {
