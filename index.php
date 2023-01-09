@@ -36,12 +36,13 @@ function pvsw_handle_ajax_add_to_cart() {
     $cart_item_key = WC()->cart->add_to_cart($_POST['product_id'], 1);
     $checkout_url = wc_get_checkout_url();
 
-    wp_send_json_success([
-        "redirect_url" => $checkout_url
+    wp_send_json([
+        'success' => true,
+        'redirect_url' => $checkout_url
     ]);
 }
-add_action('wp_ajax_pvsw_add_to_cart', 'pvsw_handle_add_to_cart');
-add_action('wp_ajax_nopriv_pvsw_add_to_cart', 'pvsw_handle_add_to_cart');
+add_action('wp_ajax_pvsw_add_to_cart', 'pvsw_handle_ajax_add_to_cart');
+add_action('wp_ajax_nopriv_pvsw_add_to_cart', 'pvsw_handle_ajax_add_to_cart');
 
 /**
  * Register new Elementor widget.

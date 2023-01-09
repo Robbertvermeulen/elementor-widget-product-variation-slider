@@ -1,5 +1,6 @@
 const { render, useState, useEffect } = wp.element;
 import axios from "axios";
+import qs from "qs";
 
 const ProductVariationSlider = () => {
   const widget = window.productVariationSlider;
@@ -13,6 +14,7 @@ const ProductVariationSlider = () => {
   const [selectedId, setSelectedId] = useState();
   const [price, setPrice] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [succeeded, setSucceeded] = useState(false);
 
   useEffect(() => {
     const getSliderRange = () => {
@@ -81,15 +83,18 @@ const ProductVariationSlider = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await axios.post(pvsw.ajaxUrl, {
-        action: "pvsw_add_to_cart",
-        product_id: selectedId,
-      });
-
-      if (response && response?.data?.success) {
+      const response = await axios.post(
+        window.pvsw.ajaxUrl,
+        qs.stringify({
+          action: "pvsw_add_to_cart",
+          product_id: selectedId,
+        })
+      );
+      if (response?.data?.success) {
         setLoading(false);
+        setSucceeded(true);
         if (response.data.redirect_url) {
-          console.log(response.data.redirect_url);
+          window.location.href = response.data.redirect_url;
         }
       }
     } catch (error) {
@@ -128,7 +133,9 @@ const ProductVariationSlider = () => {
           onClick={handleCartButtonClick}
           disabled={loading}
         >
-          {cartButtonText}
+          {(succeeded && "One moment please..") ||
+            (loading && "Loading..") ||
+            cartButtonText}
         </button>
       </div>
     </div>
